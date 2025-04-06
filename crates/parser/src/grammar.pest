@@ -1,0 +1,110 @@
+// PEG version of simplified q-like grammar
+
+start
+  = _ stmts:stat+ EOF { return stmts; }
+
+stat
+  = _ ";" _ expr                         // printExpr
+  / _ NEWLINE _ expr                     // printExpr
+  / _ NEWLINE                            // blank
+  / _ ";"                                // blank
+
+expr
+  = apply
+  / applyBracket
+  / binop
+  / parens
+  / nestedList
+  / table
+  / function
+  / assign
+  / identifier
+  / query
+  / slash
+  / datatype
+
+apply
+  = e1:expr __ e2:expr+ { return { type: "apply", fn: e1, args: e2 }; }
+
+applyBracket
+  = e:expr _ "[" _ args:multiExpr _ "]" { return { type: "applyBracket", fn: e, args }; }
+
+binop
+  = left:expr _ op:BINOP _ right:expr { return { type: "binop", op, left, right }; }
+
+parens
+  = "(" _ e:expr _ ")" { return e; }
+
+nestedList
+  = "(" _ multi:multiExpr _ ")" { return multi; }
+
+table
+  = "(" _ "[" _ key:multiAssign _ "]" _ val:multiAssign _ ")" { return { type: "table", key, val }; }
+
+function
+  = "{" _ args:("[" _ ids:multiID _ "]")? _ body:functionBody _ "}" { return { type: "function", args, body }; }
+
+assign
+  = id:identifier _ ":" _ val:expr { return { type: "assign", id, val }; }
+
+identifier
+  = id:ID { return { type: "id", value: id }; }
+
+slash
+  = "\\" cmd:(!NEWLINE .)* { return { type: "slash", cmd: text() }; }
+
+query
+  = "select" _ fields:csvq _ by:(_ "by" _ csvq)? _ "from" _ tbl:expr _ where:(_ "where" _ csvq)? {
+      return { type: "query", fields, by, tbl, where };
+    }
+
+multiExpr
+  = head:expr? tail:(_ ";" _ expr?)* { return [head].concat(tail.map(x => x[3])).filter(Boolean); }
+
+multiAssign
+  = head:assign* tail:(_ ";" _ assign)* { return head.concat(tail.map(x => x[3])); }
+
+multiID
+  = head:ID* tail:(_ ";" _ ID)* { return head.concat(tail.map(x => x[3])); }
+
+functionBody
+  = stat*
+
+csvq
+  = head:expr? tail:(_ "," _ expr)* { return [head].concat(tail.map(x => x[3])).filter(Boolean); }
+
+datatype
+  = SYMBOL+ { return { type: "symbolList", value: text() }; }
+  / BOOLLIST
+  / BOOL
+  / NUMNUM
+  / NUMLIST
+  / CHAR
+  / CHARLIST
+  / SYMBOL
+  / DATE
+  / MONTH
+  / TIME
+  / '(' _ ')' { return []; }
+
+BINOP = ":" / "<" / ">" / "<=" / ">=" / "&" / "|" / "~" / "?" / "=" / "<>" / "+" / "-" / "*" / "%" / "@"
+ID    = [a-zA-Z_.] [a-zA-Z0-9_.]*
+
+BOOL     = [01] "b"
+BOOLLIST = [01]+ "b"
+NUMNUM   = [0-9]+
+NUMLIST  = [0-9]+ (" " [0-9]+)+
+
+CHAR     = "\"" [^"\r\n\\]* "\""
+CHARLIST = "\"" [^"\r\n\\]* "\""
+SYMBOL   = "`" [a-zA-Z0-9_:.\/]*
+
+DATE = [0-9]{4} "." [01][0-9] "." [0-3][0-9] "d"?
+MONTH = [0-9]{4} "." [01][0-9] "m"?
+TIME = [0-2][0-9] ":" [0-5][0-9] (":" [0-5][0-9] ("." [0-9]+)?)?
+
+NEWLINE = [\r\n]+
+_       = [ \t]*
+__      = [ \t]+
+EOF     = !.
+

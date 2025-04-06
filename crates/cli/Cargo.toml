@@ -1,0 +1,8 @@
+[package]
+name = "neodb-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+neodb-core = { path = "../core" }
+neodb-parser = { path = "../parser" }
