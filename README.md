@@ -1,12 +1,14 @@
 **neodb**  
+
+**what is it?**  
 is a research project, focusing on the development of a data engine written in Rust,
 focused on the intersection of 
 - columnar time-series storage
 - streaming data ingestion
 - intelligent query execution.
 
-**neodb**  
-is an experimental database engine written in Rust, exploring:
+**goals**  
+is an experimental database engine exploring:
 - Efficient, columnar storage structures
 - A custom query language (`nql`) for time-aware analytics
 - Event-aligned, streaming-friendly processing models
