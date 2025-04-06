@@ -19,16 +19,6 @@ It is not stable, nor production-ready.
 
 We're actively validating architectural models, benchmarking performance, and experimenting with query abstractions.
 
-## License
-**neodb** is licensed under the **Business Source License 1.1 (BSL)**.
-
-- Free for research, development, and internal non-production use
-- Not permitted for commercial or hosted use (e.g., DBaaS/SaaS) without a commercial license
-
-On **April 6, 2028**, the license will automatically convert to **Mozilla Public License 2.0 (MPL 2.0)**.
-
-See the [`LICENSE`](./LICENSE) file for full terms.
-
 ## Contact
 For licensing, research collaboration, or commercial use inquiries:
 **Ervin Bosenbacher** – [ervin.bosenbacher@neodb.io]
