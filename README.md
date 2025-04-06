@@ -20,7 +20,6 @@ It is not stable, nor production-ready.
 We're actively validating architectural models, benchmarking performance, and experimenting with query abstractions.
 
 ## Contact
-For licensing, research collaboration, or commercial use inquiries:
 **Ervin Bosenbacher** – [ervin.bosenbacher@neodb.io]
 
 ## Coming Soon
