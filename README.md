@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/neodbio/neodb/actions/workflows/build.yml/badge.svg)](https://github.com/neodbio/neodb/actions)
+
 **neodb**  
 
 **what is it?**  
